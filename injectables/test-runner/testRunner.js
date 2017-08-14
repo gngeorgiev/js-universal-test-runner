@@ -94,7 +94,8 @@ const MobileTapReporter = require('./mobileTapReporter');
                     var src = script.src;
                     self.path = src.substr(0, src.lastIndexOf('/') + 1);
 					self.libsPath = self.path.replace('bundles', 'test-libs');
-                    scripts = script.dataset.js && script.dataset.js.split(',');
+                    scripts = script.dataset.js && script.dataset.js.split(',');       
+                    scripts.unshift('../../dist/kinvey-html5-sdk.min.js');
                     css = script.dataset.css && script.dataset.css.split(',');
                 }
             });
