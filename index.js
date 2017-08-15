@@ -7,7 +7,7 @@ const logServer = require('./lib/logServer');
 module.exports = {
     Runner,
     tasks: {
-        logServer: () => ['logServer', logServer],
+        logServer: logToConsole => ['logServer', logServer, logToConsole],
         copy: (from, to) => [`copy ${from} => ${to}`, copy, from, to],
         remove: path => [`remove => ${path}`, remove, path],
         copyTestRunner: to => [`copyTestRunner => ${to}`, copyTestRunner, to],
@@ -24,11 +24,12 @@ module.exports = {
             cwd,
             silent
         ],
-        processTemplateFile: (file, data) => [
-            `processTemplateFile ${file}`,
+        processTemplateFile: (file, data, output) => [
+            `processTemplateFile ${file} -> ${output}`,
             processTemplateFile,
             file,
-            data
+            data,
+            output
         ]
     }
 };

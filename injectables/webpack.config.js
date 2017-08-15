@@ -8,7 +8,7 @@ const testRunnerWebpackConfig = {
         path: path.join(__dirname, './bundles'),
         filename: 'testRunner.bundle.js'
     },
-    devtool: 'cheap-eval-source-map',
+    devtool: 'sourcemap',
     externals: {
         'react-native': true,
         './libs/chai': true,
