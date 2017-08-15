@@ -10,7 +10,12 @@ const MobileTapReporter = require('./mobileTapReporter');
 
 function TestRunner() {
     this.runQueue = [];
-    this.initialize();
+
+    if (this.isDevice()) {
+        this.initializeGlobals(global);
+    } else {
+        this.initializeGlobals(window);
+    }
 }
 
 TestRunner.prototype.isCordovaApp = function() {
@@ -39,8 +44,8 @@ TestRunner.prototype.isCordovaApp = function() {
 
 TestRunner.prototype.initializeGlobals = function(root) {
     root.runner = this;
-    root.chai = require('./libs/chai');
-    root.mocha = require('./libs/mocha');
+    root.chai = require('../test-libs/chai');
+    root.mocha = require('../test-libs/mocha');
     root.ok = chai.assert.ok;
     root.assert = chai.assert;
     root.equal = chai.assert.strictEqual;
@@ -52,128 +57,9 @@ TestRunner.prototype.initializeGlobals = function(root) {
 
 TestRunner.prototype.initialize = function initialize(tests, config) {
     this.config = config;
-
-    this.defaultScripts = [];
-
     if (this.isDevice() && tests) {
-        this.initializeGlobals(global);
-        //due to react-native we can't have dynamic requires
-        // require('./suites/externalconfig.js');
-        // require('./suites/common.js');
-        // require('./suites/offline-common.js');
-
-        var el;
-        if (isNativeScript || isReactNative) {
-            // el = require(`./everlive.js`);
-        } else {
-            // var nodeBundle =
-            //     '../bundles/node-nativescript/everlive.node-nativescript.js'; //working around the static react analysis
-            // el = require(nodeBundle);
-        }
-
-        // global.Everlive = el;
-
         tests();
-    } else if (!this.isDevice()) {
-        this.initializeGlobals(window);
-
-        this.defaultScripts = this.defaultScripts.concat(
-            [
-                // '../bundles/web-cordova/everlive.web-cordova.js'
-            ]
-        );
-
-        this.defaultScripts.unshift('libs/chai.js');
-        this.defaultScripts.unshift('libs/mocha.js');
-        this.defaultScripts.unshift('libs/underscore.js');
-
-        if (isCordova) {
-            this.defaultScripts.unshift('../cordova.js');
-            // this.defaultScripts[this.defaultScripts.length - 1] =
-            //     'everlive.js';
-        }
-
-        this.defaultLinks = ['libs/mocha.css'];
-
-        var scripts = null;
-        var css = null;
-        var self = this;
-
-        [].forEach.call(document.querySelectorAll('script'), function(script) {
-            if (script.src.indexOf('TestRunner') !== -1) {
-                var src = script.src;
-                self.path = src.substr(0, src.lastIndexOf('/') + 1);
-                scripts = script.dataset.js && script.dataset.js.split(',');
-                css = script.dataset.css && script.dataset.css.split(',');
-            }
-        });
-
-        if (document && !document.getElementById('mocha')) {
-            var mochaDiv = document.createElement('div');
-            mochaDiv.id = 'mocha';
-            document.body.appendChild(mochaDiv);
-        }
-
-        this.loadAndDefaults(scripts, css);
     }
-};
-
-TestRunner.prototype.loadDefaults = function() {
-    this.load(this.defaultScripts, this.defaultLinks);
-};
-
-TestRunner.prototype.loadAndDefaults = function(scripts, links) {
-    this.loadDefaults();
-    this.load(scripts, links, true);
-};
-
-TestRunner.prototype.load = function(scripts, links, relative) {
-    var self = this;
-
-    if (scripts) {
-        scripts = Array.isArray(scripts) ? scripts : [scripts];
-
-        scripts.forEach(function(script) {
-            self.loadScript(script.trim(), relative);
-        });
-    }
-
-    if (links) {
-        links = Array.isArray(links) ? links : [links];
-
-        links.forEach(function(link) {
-            self.loadCss(link.trim());
-        });
-    }
-};
-
-TestRunner.prototype.loadScript = function insertScriptTag(src, relative) {
-    if (isNativeScript) {
-        var scriptName = src.substring(src.lastIndexOf('/'));
-        window[scriptName] = require(src);
-    } else {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        var prefix = relative ? '' : this.path;
-        script.src = prefix + src;
-        script.async = false;
-
-        document.head.appendChild(script);
-    }
-};
-
-TestRunner.prototype.loadCss = function insertLinkTag(href) {
-    if (isNativeScript) {
-        return;
-    }
-
-    var link = document.createElement('link');
-
-    link.type = 'text/css';
-    link.rel = 'stylesheet';
-    link.href = this.path + href;
-
-    document.head.appendChild(link);
 };
 
 TestRunner.prototype.run = function run(tests, testFunc, context) {
@@ -237,7 +123,7 @@ TestRunner.prototype.runMocha = function() {
     mocha.run();
 };
 
-var runner = new TestRunner();
+const runner = new TestRunner();
 
 if (isCordova) {
     document.addEventListener('deviceready', function() {

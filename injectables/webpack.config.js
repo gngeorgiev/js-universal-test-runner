@@ -10,12 +10,7 @@ const testRunnerWebpackConfig = {
     },
     devtool: 'sourcemap',
     externals: {
-        'react-native': true,
-        './libs/chai': true,
-        './libs/mocha': true,
-        './suites/externalconfig.js': true,
-        './suites/common.js': true,
-        './suites/offline-common.js': true
+        'react-native': true
     }
 };
 

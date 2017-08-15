@@ -11,7 +11,7 @@ module.exports = {
         copy: (from, to) => [`copy ${from} => ${to}`, copy, from, to],
         remove: path => [`remove => ${path}`, remove, path],
         copyTestRunner: to => [`copyTestRunner => ${to}`, copyTestRunner, to],
-        copyTestLibs: to => [`copyTestLibs ${to}`, copyTestLibs, to],
+        copyTestLibs: to => [`copyTestLibs => ${to}`, copyTestLibs, to],
         runCommand: ({ command, args, silent, cwd }) => [
             `runCommand ${command} ${args}`,
             runCommand,
@@ -25,7 +25,7 @@ module.exports = {
             silent
         ],
         processTemplateFile: (file, data, output) => [
-            `processTemplateFile ${file} -> ${output}`,
+            `processTemplateFile ${file} => ${output}`,
             processTemplateFile,
             file,
             data,
