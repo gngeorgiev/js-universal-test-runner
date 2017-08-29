@@ -2,6 +2,7 @@ const { Runner } = require('./lib/runner');
 const { copyTestRunner, copy, copyTestLibs, remove } = require('./lib/inject');
 const { runCommand, installPackages } = require('./lib/commands');
 const { processTemplateFile } = require('./lib/templates');
+const { when, ifThenElse } = require('./lib/conditionals');
 const logServer = require('./lib/logServer');
 
 module.exports = {
@@ -30,6 +31,21 @@ module.exports = {
             file,
             data,
             output
+        ]
+    },
+    conditionals: {
+        when: (condition, task) => [
+            `when ${condition} then ${Runner.parseTask(task).name}`,
+            when,
+            condition,
+            task
+        ],
+        ifThenElse: (condition, thenTask, elseTask) => [
+            `if ${condition} then ${Runner.parseTask(thenTask)
+                .name} else ${Runner.parseTask(elseTask).name}`,
+            ifThenElse,
+            thenTask,
+            elseTask
         ]
     }
 };
