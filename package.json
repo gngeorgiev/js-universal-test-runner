@@ -4,6 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "postinstall": "npm run build-deps",
         "test": "echo \"Error: no test specified\" && exit 1",
         "build-deps": "parallel-webpack --config=injectables/webpack.config.js"
     },

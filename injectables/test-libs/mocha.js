@@ -1,19 +1,4 @@
-var isNativeScriptApplication =
-    (typeof android !== 'undefined' &&
-        android &&
-        android.widget &&
-        android.widget.Button) ||
-    (typeof UIButton !== 'undefined' && UIButton);
-var console = console;
-
-if (isNativeScriptApplication) {
-    // if it's a native script application, use the console module
-    var c = 'console';
-    var consoleLib = require(c);
-    var console = new consoleLib.Console();
-}
-
-(function(console) {
+(function() {
     var mochaLog = function(message) {
         if (typeof message === 'string') {
             var keys = Object.keys(arguments);
@@ -5998,4 +5983,4 @@ if (isNativeScriptApplication) {
     if (typeof exports !== 'undefined') {
         exports = module.exports = mocha;
     }
-})(console);
+})();
