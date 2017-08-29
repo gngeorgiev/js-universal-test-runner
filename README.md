@@ -200,7 +200,7 @@ ifThenElse(() => new Promise(resolve => {
             i++;
             if (i === 5) {
                 clearInterval(interal);
-                resolve();
+                resolve(true);
             }
         }, 1000);
     }),
