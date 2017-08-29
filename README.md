@@ -108,7 +108,7 @@ const {
     },
     conditionals: {
         when,
-        ifThenElseTasks
+        ifThenElse
     }
 } = require('universal-js-runner');
 ```
