@@ -191,7 +191,12 @@ const MobileTapReporter = __webpack_require__(5);
 
 function TestRunner() {
     this.runQueue = [];
-    this.initialize();
+
+    if (this.isDevice()) {
+        this.initializeGlobals(global);
+    } else {
+        this.initializeGlobals(window);
+    }
 }
 
 TestRunner.prototype.isCordovaApp = function() {
@@ -233,14 +238,8 @@ TestRunner.prototype.initializeGlobals = function(root) {
 
 TestRunner.prototype.initialize = function initialize(tests, config) {
     this.config = config;
-
-    this.defaultScripts = [];
-
     if (this.isDevice() && tests) {
-        this.initializeGlobals(global);
         tests();
-    } else if (!this.isDevice()) {
-        this.initializeGlobals(window);
     }
 };
 
@@ -305,7 +304,7 @@ TestRunner.prototype.runMocha = function() {
     mocha.run();
 };
 
-var runner = new TestRunner();
+const runner = new TestRunner();
 
 if (isCordova) {
     document.addEventListener('deviceready', function() {
@@ -4562,22 +4561,7 @@ webpackEmptyContext.id = 6;
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global, __dirname) {var isNativeScriptApplication =
-    (typeof android !== 'undefined' &&
-        android &&
-        android.widget &&
-        android.widget.Button) ||
-    (typeof UIButton !== 'undefined' && UIButton);
-var console = console;
-
-if (isNativeScriptApplication) {
-    // if it's a native script application, use the console module
-    var c = 'console';
-    var consoleLib = !(function webpackMissingModule() { var e = new Error("Cannot find module \".\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-    var console = new consoleLib.Console();
-}
-
-(function(console) {
+/* WEBPACK VAR INJECTION */(function(global, __dirname) {(function() {
     var mochaLog = function(message) {
         if (typeof message === 'string') {
             var keys = Object.keys(arguments);
@@ -10562,21 +10546,9 @@ if (isNativeScriptApplication) {
     if (true) {
         exports = module.exports = mocha;
     }
-})(console);
+})();
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), "/"))
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-function webpackEmptyContext(req) {
-	throw new Error("Cannot find module '" + req + "'.");
-}
-webpackEmptyContext.keys = function() { return []; };
-webpackEmptyContext.resolve = webpackEmptyContext;
-module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 9;
 
 /***/ })
 /******/ ]);
